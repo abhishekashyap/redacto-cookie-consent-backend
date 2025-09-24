@@ -28,11 +28,27 @@ export class ConsentDatabase {
       if (fs.existsSync(consentPath)) {
         const data = fs.readFileSync(consentPath, "utf8");
         this.consentRecords = JSON.parse(data);
+        // Convert string dates back to Date objects
+        this.consentRecords = this.consentRecords.map((record) => ({
+          ...record,
+          timestamp: new Date(record.timestamp),
+          createdAt: new Date(record.createdAt),
+          updatedAt: new Date(record.updatedAt),
+          expiresAt: new Date(record.expiresAt),
+          anonymizedAt: record.anonymizedAt
+            ? new Date(record.anonymizedAt)
+            : undefined,
+        }));
       }
 
       if (fs.existsSync(auditPath)) {
         const data = fs.readFileSync(auditPath, "utf8");
         this.auditLogs = JSON.parse(data);
+        // Convert string dates back to Date objects
+        this.auditLogs = this.auditLogs.map((log) => ({
+          ...log,
+          timestamp: new Date(log.timestamp),
+        }));
       }
     } catch (error) {
       console.error("Error loading database:", error);
