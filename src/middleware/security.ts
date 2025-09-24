@@ -46,19 +46,68 @@ export const corsOptions = {
     origin: string | undefined,
     callback: (err: Error | null, allow?: boolean) => void
   ) => {
-    const allowedOrigins = process.env.CORS_ORIGIN?.split(",") || [
-      "http://localhost:5001",
-    ];
-
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      return callback(null, true);
     }
+
+    const corsOrigin = process.env.CORS_ORIGIN;
+
+    // If CORS_ORIGIN is set to "*", allow all origins
+    if (corsOrigin === "*") {
+      return callback(null, true);
+    }
+
+    // If CORS_ORIGIN is not set, allow common development origins
+    if (!corsOrigin) {
+      const defaultOrigins = [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://localhost:5000",
+        "http://localhost:5001",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:3001",
+        "http://127.0.0.1:5000",
+        "http://127.0.0.1:5001",
+      ];
+
+      if (defaultOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+    } else {
+      // Parse comma-separated origins
+      const allowedOrigins = corsOrigin.split(",").map((o) => o.trim());
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+    }
+
+    // In development, be more permissive
+    if (process.env.NODE_ENV === "development") {
+      console.warn(`CORS: Allowing origin ${origin} in development mode`);
+      return callback(null, true);
+    }
+
+    // In production, be strict
+    console.error(`CORS: Blocked origin ${origin}`);
+    callback(new Error("Not allowed by CORS"));
   },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "X-RateLimit-Limit",
+    "X-RateLimit-Remaining",
+    "X-RateLimit-Reset",
+  ],
+  exposedHeaders: [
+    "X-RateLimit-Limit",
+    "X-RateLimit-Remaining",
+    "X-RateLimit-Reset",
+  ],
 };
 
 // Extend Request interface to include custom properties

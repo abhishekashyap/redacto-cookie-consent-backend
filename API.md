@@ -59,6 +59,7 @@ Records a new consent decision.
 {
   "userId": "string (required, 1-255 chars)",
   "sessionId": "string (required, 1-255 chars)",
+  "currentorgid": "string (required, 1-255 chars)",
   "consentType": "string (required, one of: necessary, functional, analytics, marketing, all)",
   "consentStatus": "string (required, one of: granted, denied, withdrawn)",
   "ipAddress": "string (required, valid IP address)",
@@ -81,6 +82,7 @@ Records a new consent decision.
     "id": "uuid",
     "userId": "string",
     "sessionId": "string",
+    "currentorgid": "string",
     "consentType": "string",
     "consentStatus": "string",
     "timestamp": "2024-01-01T00:00:00.000Z",
@@ -113,6 +115,7 @@ Retrieves consent records with optional filtering.
 
 - `userId` (optional): Filter by user ID
 - `sessionId` (optional): Filter by session ID
+- `currentorgid` (optional): Filter by organization ID
 - `consentType` (optional): Filter by consent type
 - `consentStatus` (optional): Filter by consent status
 - `startDate` (optional): Filter records from this date (ISO string)
@@ -130,6 +133,7 @@ Retrieves consent records with optional filtering.
       "id": "uuid",
       "userId": "string",
       "sessionId": "string",
+      "currentorgid": "string",
       "consentType": "string",
       "consentStatus": "string",
       "timestamp": "2024-01-01T00:00:00.000Z",
@@ -171,6 +175,7 @@ Retrieves a specific consent record by ID.
     "id": "uuid",
     "userId": "string",
     "sessionId": "string",
+    "currentorgid": "string",
     "consentType": "string",
     "consentStatus": "string",
     "timestamp": "2024-01-01T00:00:00.000Z",
@@ -218,6 +223,7 @@ Updates the status of an existing consent record.
     "id": "uuid",
     "userId": "string",
     "sessionId": "string",
+    "currentorgid": "string",
     "consentType": "string",
     "consentStatus": "withdrawn",
     "timestamp": "2024-01-01T00:00:00.000Z",
@@ -379,6 +385,7 @@ curl -X POST http://localhost:5001/api/consent/record \
   -d '{
     "userId": "user123",
     "sessionId": "session456",
+    "currentorgid": "org789",
     "consentType": "analytics",
     "consentStatus": "granted",
     "ipAddress": "192.168.1.1",
@@ -393,7 +400,7 @@ curl -X POST http://localhost:5001/api/consent/record \
 ### Retrieve User Consent History
 
 ```bash
-curl "http://localhost:5001/api/consent/logs?userId=user123&limit=10"
+curl "http://localhost:5001/api/consent/logs?userId=user123&currentorgid=org789&limit=10"
 ```
 
 ### Withdraw Consent

@@ -80,6 +80,10 @@ export class ConsentDatabase {
       records = records.filter((r) => r.sessionId === query.sessionId);
     }
 
+    if (query.currentorgid) {
+      records = records.filter((r) => r.currentorgid === query.currentorgid);
+    }
+
     if (query.consentType) {
       records = records.filter((r) => r.consentType === query.consentType);
     }

@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from "express";
 export const consentRequestSchema = Joi.object({
   userId: Joi.string().required().min(1).max(255),
   sessionId: Joi.string().required().min(1).max(255),
+  currentorgid: Joi.string().required().min(1).max(255),
   consentType: Joi.string()
     .valid("necessary", "functional", "analytics", "marketing", "all")
     .required(),
@@ -21,6 +22,7 @@ export const consentRequestSchema = Joi.object({
 export const logsQuerySchema = Joi.object({
   userId: Joi.string().optional().min(1).max(255),
   sessionId: Joi.string().optional().min(1).max(255),
+  currentorgid: Joi.string().optional().min(1).max(255),
   consentType: Joi.string()
     .valid("necessary", "functional", "analytics", "marketing", "all")
     .optional(),

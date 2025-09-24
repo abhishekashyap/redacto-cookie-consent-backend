@@ -2,6 +2,7 @@ export interface ConsentRecord {
   id: string;
   userId: string;
   sessionId: string;
+  currentorgid: string;
   consentType: "necessary" | "functional" | "analytics" | "marketing" | "all";
   consentStatus: "granted" | "denied" | "withdrawn";
   timestamp: Date;
@@ -43,6 +44,7 @@ export interface AuditLog {
 export interface ConsentRequest {
   userId: string;
   sessionId: string;
+  currentorgid: string;
   consentType: ConsentRecord["consentType"];
   consentStatus: ConsentRecord["consentStatus"];
   ipAddress: string;
@@ -63,6 +65,7 @@ export interface ConsentResponse {
 export interface LogsQuery {
   userId?: string;
   sessionId?: string;
+  currentorgid?: string;
   consentType?: ConsentRecord["consentType"];
   consentStatus?: ConsentRecord["consentStatus"];
   startDate?: Date;

@@ -42,6 +42,7 @@ export class ConsentService {
       id: consentId,
       userId: request.userId,
       sessionId: request.sessionId,
+      currentorgid: request.currentorgid,
       consentType: request.consentType,
       consentStatus: request.consentStatus,
       timestamp: now,

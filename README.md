@@ -88,7 +88,11 @@ CONSENT_RETENTION_DAYS=2555
 AUDIT_LOG_RETENTION_DAYS=2555
 
 # CORS Configuration
-CORS_ORIGIN=http://localhost:5001
+# Options:
+# - "*" = Allow all origins (use with caution in production)
+# - "http://localhost:3000,https://yourdomain.com" = Comma-separated list of allowed origins
+# - Leave empty = Allow common development origins (localhost:3000, localhost:5000, etc.)
+CORS_ORIGIN=
 
 # Logging
 LOG_LEVEL=info
@@ -124,6 +128,7 @@ curl -X POST http://localhost:5001/api/consent/record \
   -d '{
     "userId": "user123",
     "sessionId": "session456",
+    "currentorgid": "org789",
     "consentType": "analytics",
     "consentStatus": "granted",
     "ipAddress": "192.168.1.1",
@@ -138,7 +143,7 @@ curl -X POST http://localhost:5001/api/consent/record \
 ### Retrieve Consent Logs
 
 ```bash
-curl "http://localhost:5001/api/consent/logs?userId=user123&limit=10&offset=0"
+curl "http://localhost:5001/api/consent/logs?userId=user123&currentorgid=org789&limit=10&offset=0"
 ```
 
 ### Update Consent Status
@@ -211,6 +216,50 @@ This backend implements the following DPDPA compliance measures:
 - IP address logging and tracking
 - Secure database operations
 - Error handling without information leakage
+
+## CORS Configuration
+
+The API supports flexible CORS configuration through the `CORS_ORIGIN` environment variable:
+
+### Development Mode (Default)
+
+When `CORS_ORIGIN` is not set or empty, the API automatically allows common development origins:
+
+- `http://localhost:3000`
+- `http://localhost:3001`
+- `http://localhost:5000`
+- `http://localhost:5001`
+- `http://127.0.0.1:3000`
+- `http://127.0.0.1:3001`
+- `http://127.0.0.1:5000`
+- `http://127.0.0.1:5001`
+
+### Production Configuration
+
+**Option 1: Allow All Origins (Use with caution)**
+
+```env
+CORS_ORIGIN=*
+```
+
+**Option 2: Specific Origins**
+
+```env
+CORS_ORIGIN=https://yourdomain.com,https://app.yourdomain.com
+```
+
+**Option 3: Development Origins**
+
+```env
+CORS_ORIGIN=http://localhost:3000,http://localhost:5000
+```
+
+### CORS Features
+
+- **Credentials Support**: Cookies and authorization headers are supported
+- **Methods**: GET, POST, PUT, DELETE, OPTIONS
+- **Headers**: Content-Type, Authorization, X-Requested-With, Rate Limit headers
+- **Development Mode**: Automatically allows any origin in development mode with a warning
 
 ## Development
 
